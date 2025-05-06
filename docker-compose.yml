@@ -1,0 +1,31 @@
+
+
+services:
+  conexionpractica:
+    build: conexionpractica
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL:  jdbc:mysql://conexion_prueba:3306/conexionPrueba?createDataBaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+    restart: always
+    depends_on:
+      conexion_prueba:
+        condition: service_healthy
+  conexion_prueba:
+    image: mysql:8
+    ports:
+        - "3307:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: conexionPrueba
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+
+
+          
+    
+      
